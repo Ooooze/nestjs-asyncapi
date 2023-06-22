@@ -12,10 +12,30 @@ export const exploreAsyncApiOperationMetadata = (
   _prototype: Type<unknown>,
   method: object,
 ) => {
-  const metadataOperations: AsyncApiOperationOptionsRaw[] = Reflect.getMetadata(DECORATORS.AsyncApiOperation, method);
-  const metadataSubs: AsyncApiOperationOptionsRaw[] = Reflect.getMetadata(DECORATORS.AsyncApiSub, method);
-  const metadataPubs: AsyncApiOperationOptionsRaw[] = Reflect.getMetadata(DECORATORS.AsyncApiPub, method);
-  const metadataCombined = [...metadataOperations || [], ...metadataSubs || [], ...metadataPubs || []]
+  const metadataOperations: AsyncApiOperationOptionsRaw[] = Reflect.getMetadata(
+    DECORATORS.AsyncApiOperation,
+    method,
+  );
+  const metadataSubs: AsyncApiOperationOptionsRaw[] = Reflect.getMetadata(
+    DECORATORS.AsyncApiSub,
+    method,
+  );
+  const metadataPubs: AsyncApiOperationOptionsRaw[] = Reflect.getMetadata(
+    DECORATORS.AsyncApiPub,
+    method,
+  );
+
+  const metadataCombined = [];
+
+  if (metadataOperations) {
+    metadataCombined.push(...Object.values(metadataOperations));
+  }
+  if (metadataPubs) {
+    metadataCombined.push(...Object.values(metadataPubs));
+  }
+  if (metadataSubs) {
+    metadataCombined.push(...Object.values(metadataSubs));
+  }
 
   return metadataCombined.map((option: AsyncApiOperationOptionsRaw) => {
     const { channel, type } = option;

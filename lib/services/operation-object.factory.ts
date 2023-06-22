@@ -24,6 +24,9 @@ export class OperationObjectFactory {
     schemas: Record<string, SchemaObject>,
   ): AsyncOperationObject {
     const { message } = operation;
+    if (!message) {
+      console.log(operation);
+    }
     const { oneOf } = message as OneOfMessageType;
 
     if (oneOf) {

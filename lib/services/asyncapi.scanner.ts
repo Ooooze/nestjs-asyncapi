@@ -1,9 +1,9 @@
 import { INestApplicationContext, Type } from '@nestjs/common';
 import { MODULE_PATH } from '@nestjs/common/constants';
-import { Injectable } from '@nestjs/common/interfaces';
+import { Injectable, InjectionToken } from '@nestjs/common/interfaces';
 import { NestContainer } from '@nestjs/core/injector/container';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { InstanceToken, Module } from '@nestjs/core/injector/module';
+import { Module } from '@nestjs/core/injector/module';
 import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { ModelPropertiesAccessor } from '@nestjs/swagger/dist/services/model-properties-accessor';
 import { SchemaObjectFactory } from '@nestjs/swagger/dist/services/schema-object-factory';
@@ -50,20 +50,26 @@ export class AsyncapiScanner {
       : '';
 
     const denormalizedChannels = modules.reduce(
-      (channels, { components, metatype, relatedModules, routes }) => {
-        let allComponents = new Map([...components, ...routes]);
+      (channels, { providers, metatype, imports, controllers }) => {
+        let allComponents = new Map([
+          ...Array.from(providers),
+          ...Array.from(controllers),
+        ]);
 
         if (deepScanRoutes) {
           // only load submodules routes if asked
           const isGlobal = (module: Type<any>) =>
             !container.isGlobalModule(module);
 
-          Array.from(relatedModules.values())
+          Array.from(imports.values())
             .filter(isGlobal as any)
             .map(
-              ({ components: relatedComponents, routes: relatedRoutes }) => ({
-                relatedComponents,
-                relatedRoutes,
+              ({
+                providers: relatedComponents,
+                controllers: relatedRoutes,
+              }) => ({
+                relatedComponents: Array.from(relatedComponents),
+                relatedRoutes: Array.from(relatedRoutes),
               }),
             )
             .forEach(({ relatedComponents, relatedRoutes }) => {
@@ -103,7 +109,7 @@ export class AsyncapiScanner {
   }
 
   private scanModuleComponents(
-    components: Map<InstanceToken, InstanceWrapper<Injectable>>,
+    components: Map<InjectionToken, InstanceWrapper<Injectable>>,
     modulePath?: string,
     globalPrefix?: string,
     operationIdFactory?: (controllerKey: string, methodKey: string) => string,
