@@ -20,7 +20,8 @@
   },
   "ignorePatterns": [
     ".eslintrc.js",
-    "src/db/migrations"
+    "src/db/migrations",
+    "/dist/**"
   ],
   "rules": {
     "@typescript-eslint/interface-name-prefix": "off",
