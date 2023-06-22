@@ -1,6 +1,6 @@
 {
   "name": "nestjs-asyncapi",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "NestJS AsyncAPI module - generate the documentation of your event-based services using decorators",
   "author": "Ilya Moroz",
   "license": "MIT",
@@ -9,10 +9,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/flamewow/nestjs-asyncapi"
-  },
-  "validate-branch-name": {
-    "pattern": "^(main|dev){1}$|^(feat|fix|release|test|refactor|docs|perf|style|chore)/.+$",
-    "errorMsg": "The branch name isn't valid."
   },
   "keywords": [
     "asyncapi",
@@ -56,7 +52,6 @@
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-prettier": "4.2.1",
-    "husky": "8.0.3",
     "jest": "29.5.0",
     "lint-staged": "13.2.2",
     "prettier": "2.8.8",
@@ -72,32 +67,13 @@
   },
   "config": {
     "puppeteer_skip_chromium_download": true
-  },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "eslint --cache --fix"
-    ]
-  },
+  }, 
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "prepare": "husky install",
-    "format": "prettier --write \"lib/**/*.{js,ts,json}\"  \"e2e/**/*.{js,ts,json}\"",
-    "lint": "eslint --fix \"lib/**/*.ts\"  \"sample/**/*.ts\" \"test/**/*.ts\"",
-    "prestart": "npm install && npm run build",
     "make:snapshots": "bash misc/take-snaphots.sh",
-    "---execution---": "",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --watch --debug",
-    "---tests---": "",
-    "test:e2e": "jest --runInBand --config test/configs/jest-e2e.config.ts",
-    "---npm---": "",
-    "publish:next": "npm publish --access public --tag next",
-    "publish:beta": "npm publish --access public --tag beta",
-    "prepublish:npm": "npm run build",
-    "publish:npm": "npm publish --access public",
-    "prerelease": "npm run build",
-    "release": "release-it"
+    "test:e2e": "jest --runInBand --config test/configs/jest-e2e.config.ts"
   }
 }
